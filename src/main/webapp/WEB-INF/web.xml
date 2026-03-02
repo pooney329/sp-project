@@ -8,14 +8,30 @@
     <!-- ContextLoaderListener는 톰켓이 구동되면서 동작을 하는데 해당
          listener contextConfiguration(트랜잭션, aop, 등등)을 읽어 bean으로 만든는 작업을 수행
     -->
+    <!-- 모든 요청/응답 UTF-8 처리 (가장 먼저 실행되어야 함) -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring/service-context.xml
-<!--            /WEB-INF/spring/security-context.xml-->
-        </param-value>
+        <param-value>/WEB-INF/spring/root-context.xml</param-value>
     </context-param>
 
     <servlet>

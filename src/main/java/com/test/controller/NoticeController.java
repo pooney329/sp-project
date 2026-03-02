@@ -1,27 +1,28 @@
 package com.test.controller;
 
 import com.test.service.NoticeService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public class NoticeController implements Controller {
-    private NoticeService noticeService;
-    @Override
-    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+@Controller
+public class NoticeController {
 
+    private final NoticeService noticeService;
+
+    public NoticeController(NoticeService noticeService) {
+        this.noticeService = noticeService;
+    }
+
+    @RequestMapping("/notice")
+    public ModelAndView noticeList() {
         List<String> noticeList = noticeService.getNoticeList();
         noticeList.forEach(System.out::println);
         ModelAndView mv = new ModelAndView();
         mv.addObject("data", "Hello World!");
         mv.setViewName("list");
         return mv;
-    }
-
-    public void setNoticeService(NoticeService noticeService) {
-        this.noticeService = noticeService;
     }
 }

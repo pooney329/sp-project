@@ -7,9 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
 
+    @RequestMapping("/")
+    public String home() {
+        return "index";
+    }
+
     @RequestMapping("/index")
     public void aaaa(){
-        System.out.println("aaaaaaaa실작된다");
+        if(true)throw new RuntimeException("zzzz");
+        System.out.println("aaaaaaa");
     }
 
 //    @Override
