@@ -62,7 +62,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- 이메일 발송 (mock 전환으로 비활성화. 실제 발송 시 주석 해제)
+        <!-- 이메일 발송 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -73,7 +73,6 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
         </dependency>
-        -->
 
         <!-- BCrypt 암호화 -->
         <dependency>
