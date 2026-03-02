@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.mapper.MemberMapper">
+
+    <resultMap id="memberResultMap" type="com.test.dto.MemberDto">
+        <id     property="id"           column="id"/>
+        <result property="email"        column="email"/>
+        <result property="password"     column="password"/>
+        <result property="name"         column="name"/>
+        <result property="pointBalance" column="point_balance"/>
+        <result property="createdAt"    column="created_at"/>
+    </resultMap>
+
+    <select id="findByEmail" parameterType="string" resultMap="memberResultMap">
+        SELECT id, email, password, name, point_balance, created_at
+        FROM member
+        WHERE email = #{email}
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="memberResultMap">
+        SELECT id, email, password, name, point_balance, created_at
+        FROM member
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.test.dto.MemberDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO member (email, password, name, point_balance, created_at)
+        VALUES (#{email}, #{password}, #{name}, 0, NOW())
+    </insert>
+
+    <update id="updatePointBalance">
+        UPDATE member
+        SET point_balance = #{param2}
+        WHERE id = #{param1}
+    </update>
+
+    <update id="addPointBalance">
+        UPDATE member
+        SET point_balance = point_balance + #{param2}
+        WHERE id = #{param1}
+    </update>
+
+</mapper>

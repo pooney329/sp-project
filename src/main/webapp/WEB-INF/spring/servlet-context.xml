@@ -40,4 +40,14 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!-- JWT 인터셉터: 모든 요청에서 jwt 쿠키를 파싱해 loginMember request attribute 설정 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.test.config.JwtInterceptor">
+                <property name="jwtUtil" ref="jwtUtil"/>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>

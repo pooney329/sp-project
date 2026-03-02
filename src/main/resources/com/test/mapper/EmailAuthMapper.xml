@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.mapper.EmailAuthMapper">
+
+    <insert id="insert">
+        INSERT INTO email_auth (email, auth_code, expired_at, verified)
+        VALUES (#{param1}, #{param2}, #{param3}, 0)
+    </insert>
+
+    <update id="verify">
+        UPDATE email_auth
+        SET verified = 1
+        WHERE email    = #{param1}
+          AND auth_code = #{param2}
+          AND expired_at > NOW()
+          AND verified   = 0
+    </update>
+
+    <select id="countVerified" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM email_auth
+        WHERE email    = #{email}
+          AND verified = 1
+    </select>
+
+</mapper>

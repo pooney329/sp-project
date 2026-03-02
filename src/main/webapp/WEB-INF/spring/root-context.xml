@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--
+        부모 컨텍스트 (Root ApplicationContext)
+        - ContextLoaderListener 가 서버 기동 시 로드
+        - Service, Repository, Mapper 빈 담당
+        - Controller 는 servlet-context.xml(자식 컨텍스트)에서 별도 스캔
+    -->
+
+    <!-- properties 파일 로드 -->
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <!-- @Service, @Repository 등 스캔 (Controller 계층 제외) -->
+    <context:component-scan base-package="com.test">
+        <context:exclude-filter type="annotation"
+            expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+            expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <!-- DataSource -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url"             value="${db.url}"/>
+        <property name="username"        value="${db.username}"/>
+        <property name="password"        value="${db.password}"/>
+    </bean>
+
+    <!-- MyBatis SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="typeAliasesPackage" value="com.test.dto"/>
+        <property name="mapperLocations" value="classpath*:com/test/mapper/**/*.xml"/>
+    </bean>
+
+    <!-- Mapper 인터페이스 자동 스캔 (com.test.mapper 패키지) -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.test.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 트랜잭션 매니저 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- @Transactional 활성화 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- JavaMailSender: Gmail SMTP -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host"     value="${mail.host}"/>
+        <property name="port"     value="${mail.port}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

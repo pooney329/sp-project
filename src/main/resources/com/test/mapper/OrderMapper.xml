@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.mapper.OrderMapper">
+
+    <resultMap id="orderResultMap" type="com.test.dto.OrderDto">
+        <id     property="id"            column="id"/>
+        <result property="memberId"      column="member_id"/>
+        <result property="totalAmount"   column="total_amount"/>
+        <result property="pointUsed"     column="point_used"/>
+        <result property="paymentAmount" column="payment_amount"/>
+        <result property="status"        column="status"/>
+        <result property="orderedAt"     column="ordered_at"/>
+    </resultMap>
+
+    <resultMap id="orderItemResultMap" type="com.test.dto.OrderDto$OrderItemResultDto">
+        <id     property="id"          column="id"/>
+        <result property="orderId"     column="order_id"/>
+        <result property="productId"   column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="quantity"    column="quantity"/>
+        <result property="price"       column="price"/>
+    </resultMap>
+
+    <insert id="insertOrder" parameterType="com.test.dto.OrderDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (member_id, total_amount, point_used, payment_amount, status, ordered_at)
+        VALUES (#{memberId}, #{totalAmount}, #{pointUsed}, #{paymentAmount}, 'ORDERED', NOW())
+    </insert>
+
+    <insert id="insertOrderItem">
+        INSERT INTO order_item (order_id, product_id, quantity, price)
+        VALUES (#{param1}, #{param2}, #{param3}, #{param4})
+    </insert>
+
+    <select id="findByMemberId" parameterType="long" resultMap="orderResultMap">
+        SELECT id, member_id, total_amount, point_used, payment_amount, status, ordered_at
+        FROM orders
+        WHERE member_id = #{memberId}
+        ORDER BY ordered_at DESC
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="orderResultMap">
+        SELECT id, member_id, total_amount, point_used, payment_amount, status, ordered_at
+        FROM orders
+        WHERE id = #{id}
+    </select>
+
+    <select id="findItemsByOrderId" parameterType="long" resultMap="orderItemResultMap">
+        SELECT oi.id, oi.order_id, oi.product_id, p.name AS product_name, oi.quantity, oi.price
+        FROM order_item oi
+        JOIN product p ON p.id = oi.product_id
+        WHERE oi.order_id = #{orderId}
+    </select>
+
+</mapper>

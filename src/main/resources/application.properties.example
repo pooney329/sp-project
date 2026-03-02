@@ -1,0 +1,12 @@
+# DataSource
+db.driver=com.mysql.cj.jdbc.Driver
+db.url=jdbc:mysql://localhost:3306/test_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true
+db.username=root
+db.password=
+
+# Mail (Gmail SMTP)
+# Google 계정 > 보안 > 앱 비밀번호에서 16자리 발급
+mail.host=smtp.gmail.com
+mail.port=587
+mail.username=your-email@gmail.com
+mail.password=
